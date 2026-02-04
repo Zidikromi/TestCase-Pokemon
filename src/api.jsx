@@ -9,6 +9,7 @@ export const GetPokemon = async (initialCount = 30, offset = 0) => {
       results.map(async (pokemon) => {
         const detailedPokemon = await axios.get(pokemon.url);
         return detailedPokemon.data;
+        
       })
     );
     return pokemonData;

@@ -24,26 +24,36 @@ const Filter = ({ onChange }) => {
   const filteredTypes = types.filter((type) => type.name !== 'unknown' && type.name !== 'shadow');
 
   return (
-<div className="relative inline-block w-full text-gray-700">
+<div className="relative group w-full max-w-xs">
+  {/* Label mungil di atas border */}
+  <label className="absolute -top-2 left-3 bg-white px-1 text-[10px] font-bold uppercase tracking-wider text-gray-400 z-10">
+    Filter Type
+  </label>
+  
   <select
     onChange={handleSelectChange}
-    className="h-10 pl-5 pr-10 w-full bg-white border-2 border-gray-300 rounded-xl appearance-none focus:outline-none focus:border-red-500"
+    className="block w-full h-12 pl-4 pr-10 text-sm font-medium bg-white border border-gray-200 rounded-2xl appearance-none 
+               focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-red-50 transition-all duration-200
+               cursor-pointer text-slate-700 shadow-sm"
   >
-    <option value="all">All</option>
+    <option value="all">All Elements</option>
     {filteredTypes.map((type, index) => (
-      <option key={index} value={type.name}>
+      <option key={index} value={type.name} className="capitalize">
         {type.name}
       </option>
     ))}
   </select>
-  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-    <svg
-      className="w-4 h-4 fill-current"
-      viewBox="0 0 20 20"
+
+  {/* Icon Chevron yang lebih modern (Lucide-style) */}
+  <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-gray-400 group-focus-within:text-red-500 transition-colors">
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      className="h-5 w-5" 
+      fill="none" 
+      viewBox="0 0 24 24" 
+      stroke="currentColor"
     >
-      <path
-        d="M10 12l-5-5 1.41-1.41L10 9.17l3.59-3.58L15 7z"
-      ></path>
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
     </svg>
   </div>
 </div>

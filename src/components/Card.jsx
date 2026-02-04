@@ -43,6 +43,7 @@ const Card = ({ searchQuery }) => {
         const result = await GetPokemon(300);
         setPokemonData(result);
         setVisiblePokemon(result.slice(0, visiblePokemonCount));
+        console.log(result);
       } catch (error) {
         console.error('Error fetching Pokémon data:', error);
       }
@@ -138,85 +139,123 @@ const Card = ({ searchQuery }) => {
 
 
   return (
-    <div>
-      <div className='px-60'>
-        <Filter onChange={setSelectedType} />
+<div className="min-h-screen bg-slate-50 pb-20">
+      {/* Filter Section */}
+      <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100 py-6 mb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Filter onChange={setSelectedType} />
+        </div>
       </div>
-      <div className='flex flex-wrap justify-center mx-20'>
-        {visiblePokemon.map((content, i) => (
-          <div key={i} className='card w-72 bg-base-100 shadow-xl m-4'>
-            <figure className='mt-10'>
-              <img
-                src={content.sprites.other.dream_world.front_default}
-                className='w-44 h-44'
-                alt={content.name}
-              />
-            </figure>
-            <div className='card-body'>
-              <h2 className='card-title justify-center font-bold'>{content.name}</h2>
-              <p className='text-gray-400 text-sm font-bold'>
-                Height: <span className='text-black'>{content.height / 10} m</span>
-              </p>
-              <p className='text-gray-400 text-sm font-bold'>
-                Weight: <span className='text-black'>{content.weight / 10} Kg</span>
-              </p>
-              <ul className='flex gap-2'>
-                {content.types.map((type, index) => (
-                  <li
-                    className='badge font-bold text-white text-center h-5 text-xs rounded-2xl'
-                    key={index}
-                    style={{ backgroundColor: typeColorMap[type.type.name] || '#CCCCCC' }}
-                  >
-                    {type.type.name}
-                  </li>
-                ))}
-              </ul>
-              <button
-                className='btn bg-red-600 hover:bg-red-800 text-white'
-                onClick={() => handleSaveClick(content)}
-              >
-                Save
-              </button>
-              <dialog id='my_modal_2' className='modal modal-bottom sm:modal-middle'>
-                <div className='modal-box'>
-                  <h3 className='font-bold text-lg'>Give a nickname to Pokemon!</h3>
-                  <input
-                    type='text'
-                    name=''
-                    id=''
-                    placeholder='Example: Maman'
-                    className='input input-bordered w-full bg-gray-100 mt-2'
-                    value={aliasInput}
-                    onChange={(e) => setAliasInput(e.target.value)}
-                    onKeyDown={handleKeyDownInput}
-                  />
-                  <button
-                    className='w-full bg-red-500 hover:bg-red-700 btn mt-5 text-white'
-                    onClick={handleSavePokemon}
 
-                  >
-                    Save Pokemon
-                  </button>
+      {/* Grid Container */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {visiblePokemon.map((content, i) => (
+            <div 
+              key={i} 
+              className="group relative bg-white rounded-3xl p-6 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
+            >
+              {/* Image Circle Background */}
+              <div className="absolute top-10 left-1/2 -translate-x-1/2 w-32 h-32 bg-slate-100 rounded-full group-hover:bg-red-50 transition-colors duration-300" />
+              
+              <figure className="relative z-10 flex justify-center mb-6">
+                <img
+                  src={content.sprites.other.showdown.front_default}
+                  className="w-40 h-40 object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-300"
+                  alt={content.name}
+                />
+              </figure>
+
+              <div className="text-center">
+                <h2 className="text-2xl font-black capitalize text-slate-800 mb-4 tracking-tight">
+                  {content.name}
+                </h2>
+                
+                <div className="flex justify-center gap-4 mb-6">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] uppercase font-bold text-gray-400">Height</span>
+                    <span className="text-sm font-semibold text-slate-700">{content.height / 10} m</span>
+                  </div>
+                  <div className="w-[1px] bg-gray-200 h-8" />
+                  <div className="flex flex-col">
+                    <span className="text-[10px] uppercase font-bold text-gray-400">Weight</span>
+                    <span className="text-sm font-semibold text-slate-700">{content.weight / 10} Kg</span>
+                  </div>
                 </div>
-                <form method='dialog' className='modal-backdrop'>
-                  <button></button>
-                </form>
-              </dialog>
+
+                <div className="flex flex-wrap justify-center gap-2 mb-6">
+                  {content.types.map((type, index) => (
+                    <span
+                      key={index}
+                      className="px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white shadow-sm"
+                      style={{ backgroundColor: typeColorMap[type.type.name] || '#CCCCCC' }}
+                    >
+                      {type.type.name}
+                    </span>
+                  ))}
+                </div>
+
+                <button
+                  className="btn btn-block bg-red-500 border-none hover:bg-red-600 text-white rounded-2xl shadow-lg shadow-red-200"
+                  onClick={() => handleSaveClick(content)}
+                >
+                  Catch Pokemon
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-      <div className='py-10'>
-        {!searchQuery && (
+
+      {/* Pagination Section */}
+      <div className="mt-16 flex justify-center">
+        {!searchQuery && selectedType === 'all' && (
           <button
-            className='btn flex justify-center mx-auto bg-red-500 hover:bg-red-700 text-white'
+            className="btn btn-wide btn-outline border-2 hover:bg-slate-800 hover:border-slate-800 rounded-2xl font-bold transition-all"
             onClick={loadMorePokemon}
-            style={{ display: selectedType === 'all' ? 'block' : 'none' }}
           >
-            Load More
+            Load More Pokemon
           </button>
         )}
       </div>
+
+      {/* Modern Dialog - Diletakkan di luar Loop agar performa lancar */}
+      <dialog id="my_modal_2" className="modal backdrop-blur-sm">
+        <div className="modal-box rounded-[32px] p-8 shadow-2xl">
+          <div className="text-center mb-6">
+            <div className="w-20 h-20 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="font-black text-2xl text-slate-800">Gotcha!</h3>
+            <p className="text-slate-500">Give your new buddy a nickname</p>
+          </div>
+          
+          <div className="form-control w-full">
+            <input
+              type="text"
+              placeholder="e.g. Charizardy"
+              className="input input-bordered w-full bg-slate-50 border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 rounded-2xl text-center text-lg font-semibold"
+              value={aliasInput}
+              onChange={(e) => setAliasInput(e.target.value)}
+              onKeyDown={handleKeyDownInput}
+            />
+          </div>
+
+          <div className="modal-action flex-col gap-3">
+            <button
+              className="btn btn-block bg-red-500 hover:bg-red-600 border-none text-white rounded-2xl h-14"
+              onClick={handleSavePokemon}
+            >
+              Save Nickname
+            </button>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
       <ToastContainer
         position="top-right"
         autoClose={2000}
