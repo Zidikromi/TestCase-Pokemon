@@ -1,156 +1,163 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import { usePokemonContext } from '../context/PokemonContext';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Link } from 'react-router-dom';
+
+import { IoTrashOutline, IoMapOutline, IoSparklesOutline } from "react-icons/io5";
 
 const typeColorMap = {
-  normal: '#A8A77A',
-  fighting: '#C22E28',
-  flying: '#A98FF3',
-  poison: '#A33EA1',
-  ground: '#E2BF65',
-  rock: '#B6A136',
-  bug: '#A6B91A',
-  ghost: '#735797',
-  steel: '#B7B7CE',
-  fire: '#EE8130',
-  water: '#6390F0',
-  grass: '#7AC74C',
-  electric: '#F7D02C',
-  psychic: '#F95587',
-  ice: '#96D9D6',
-  dragon: '#6F35FC',
-  dark: '#705746',
-  fairy: '#D685AD',
-  unknown: '#999999',
-  shadow: '#555555',
-}
+  normal: '#A8A77A', fighting: '#C22E28', flying: '#A98FF3', poison: '#A33EA1',
+  ground: '#E2BF65', rock: '#B6A136', bug: '#A6B91A', ghost: '#735797',
+  steel: '#B7B7CE', fire: '#EE8130', water: '#6390F0', grass: '#7AC74C',
+  electric: '#F7D02C', psychic: '#F95587', ice: '#96D9D6', dragon: '#6F35FC',
+  dark: '#705746', fairy: '#D685AD',
+};
 
 const CardSave = () => {
   const { savedPokemon, deletePokemon } = usePokemonContext();
 
   const handleDelete = (pokemonAlias) => {
     deletePokemon(pokemonAlias);
-    if (savedPokemon.length > -1) {
-      toast.success(`${pokemonAlias} Deleted!`, {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
-    }
+    toast.success(`${pokemonAlias} telah dilepaskan ke alam liar`, {
+      icon: "👋",
+      style: { borderRadius: '20px', background: '#1e293b', color: '#fff' }
+    });
   };
 
-
   return (
-   <div className="min-h-[80vh] py-12 px-4 sm:px-8 lg:px-16">
-  {savedPokemon.length === 0 ? (
-    /* Modern Empty State */
-    <div className="flex flex-col items-center justify-center py-20 bg-white/50 backdrop-blur-md rounded-[40px] border-2 border-dashed border-gray-200 max-w-4xl mx-auto">
-      <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-        </svg>
-      </div>
-      <h2 className="text-2xl font-black text-slate-800 mb-2">Your Bag is Empty!</h2>
-      <p className="text-slate-500 mb-8 text-center max-w-xs">
-        You haven't caught any Pokemon yet. Go to the home page and start your journey!
-      </p>
-      <Link to="/" className="btn btn-wide bg-red-500 hover:bg-red-600 border-none text-white rounded-2xl shadow-lg shadow-red-200">
-        Start Exploring
-      </Link>
-    </div>
-  ) : (
-    <div className="max-w-7xl mx-auto">
-      {/* Header Koleksi */}
-      <div className="mb-10 text-center lg:text-left">
-        <h1 className="text-4xl font-black text-slate-800 tracking-tight">My Collection</h1>
-        <p className="text-slate-500 font-medium">You have {savedPokemon.length} buddies in your team</p>
-      </div>
-
-      {/* Modern Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {savedPokemon.map((content, i) => (
-          <div 
-            key={i} 
-            className="group relative bg-white rounded-[32px] p-6 border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden"
-          >
-            {/* Dekorasi Background Card */}
-            <div className="absolute -top-10 -right-10 w-32 h-32 bg-slate-50 rounded-full group-hover:bg-red-50 transition-colors duration-500" />
-            
-            <figure className="relative z-10 flex justify-center mt-4 mb-6">
-              <div className="absolute inset-0 bg-slate-100 rounded-full scale-75 blur-2xl opacity-50 group-hover:opacity-100 transition-opacity" />
-              <img
-                src={content.sprites.other.showdown.back_default}
-                className="w-40 h-40 object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-500"
-                alt={content.name}
-              />
-            </figure>
-
-            <div className="relative z-10 text-center">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500 mb-1 block">Nickname</span>
-              <h2 className="text-2xl font-black text-slate-800 mb-4 capitalize truncate">
-                {content.alias}
-              </h2>
-
-              <div className="flex items-center justify-center gap-4 py-3 px-4 bg-slate-50 rounded-2xl mb-6">
-                <div className="text-center">
-                  <p className="text-[10px] uppercase font-bold text-gray-400">Height</p>
-                  <p className="text-sm font-bold text-slate-700">{content.height / 10}m</p>
-                </div>
-                <div className="w-px h-6 bg-gray-200" />
-                <div className="text-center">
-                  <p className="text-[10px] uppercase font-bold text-gray-400">Weight</p>
-                  <p className="text-sm font-bold text-slate-700">{content.weight / 10}kg</p>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap justify-center gap-2 mb-8">
-                {content.types.map((type, index) => (
-                  <span
-                    key={index}
-                    className="px-4 py-1 rounded-full text-[10px] font-black uppercase text-white shadow-sm"
-                    style={{ backgroundColor: typeColorMap[type.type.name] || '#CCCCCC' }}
-                  >
-                    {type.type.name}
-                  </span>
-                ))}
-              </div>
-
-              {/* Action Button - Lebih subtle tapi tetap clear */}
-              <button
-                className="btn btn-block btn-ghost hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-2xl transition-all duration-300 font-bold border-gray-100"
-                onClick={() => handleDelete(content.alias)}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-                Release Buddy
-              </button>
-            </div>
+    <div className="min-h-screen bg-[#F8FAFC] pb-20 font-sans">
+      {/* Dynamic Header Collection */}
+      <div className="bg-white/70 backdrop-blur-xl border-b border-slate-200/50 sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div>
+            <h1 className="text-4xl font-black text-slate-900 tracking-tighter flex items-center gap-3">
+              MY SQUAD <IoSparklesOutline className="text-yellow-400 animate-pulse" />
+            </h1>
+            <p className="text-slate-500 font-medium">Kamu memiliki {savedPokemon.length} Pokémon dalam tim utama</p>
           </div>
-        ))}
+          {savedPokemon.length > 0 && (
+            <Link to="/" className="group flex items-center gap-2 bg-slate-900 text-white px-6 py-3 rounded-2xl hover:bg-red-600 transition-all shadow-lg shadow-slate-200">
+              <IoMapOutline className="text-xl" />
+              <span className="font-bold text-sm">Cari Pokémon Lagi</span>
+            </Link>
+          )}
+        </div>
       </div>
-    </div>
-  )}  
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        transition:Bounce
-      />
+
+      <div className="max-w-7xl mx-auto px-6 pt-12">
+        {savedPokemon.length === 0 ? (
+          /* Modern Empty State */
+          <div className="flex flex-col items-center justify-center py-32 bg-white rounded-[3rem] shadow-xl shadow-slate-100 border border-slate-100 max-w-3xl mx-auto px-10 text-center">
+            <div className="w-40 h-40 bg-slate-50 rounded-full flex items-center justify-center mb-8 animate-bounce">
+               <svg className="w-24 h-24 text-slate-200" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+               </svg>
+            </div>
+            <h2 className="text-3xl font-black text-slate-800 mb-4">Tas Kamu Kosong!</h2>
+            <p className="text-slate-500 mb-10 leading-relaxed font-medium">
+              Petualangan besar menantimu. Mulailah menangkap Pokémon dan bangun tim impianmu sekarang juga.
+            </p>
+            <Link to="/" className="px-10 py-4 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl transition-all shadow-2xl shadow-red-200 uppercase tracking-widest text-sm">
+              Mulai Petualangan
+            </Link>
+          </div>
+        ) : (
+          /* Collection Grid */
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+            {savedPokemon.map((content, i) => {
+              const mainColor = typeColorMap[content.types[0].type.name] || '#CBD5E1';
+              
+              return (
+                <div 
+                  key={i} 
+                  className="group relative bg-white rounded-[2.5rem] p-4 transition-all duration-500 hover:scale-[1.03]"
+                  style={{ boxShadow: `0 30px 60px -15px ${mainColor}25` }}
+                >
+                  {/* Status Badge */}
+                  <div className="absolute top-6 right-6 z-20">
+                    <div className="flex items-center gap-1.5 bg-green-50 text-green-600 px-3 py-1 rounded-full border border-green-100">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-ping" />
+                      <span className="text-[9px] font-black uppercase tracking-tighter">Active Buddy</span>
+                    </div>
+                  </div>
+
+                  {/* Stage Area */}
+                  <div className="relative rounded-[2rem] bg-slate-50 p-6 pt-10 group-hover:bg-white transition-colors duration-500 overflow-hidden">
+                    {/* Decorative Radial Background */}
+                    <div 
+                      className="absolute inset-0 opacity-10 blur-3xl transition-transform group-hover:scale-150"
+                      style={{ background: `radial-gradient(circle, ${mainColor} 0%, transparent 70%)` }}
+                    />
+
+                    <figure className="relative z-10 flex justify-center mb-6">
+                      <img
+                        src={content.sprites.other.showdown.front_default || content.sprites.front_default}
+                        className="w-36 h-36 object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.15)] group-hover:scale-125 transition-transform duration-500 animate-float"
+                        alt={content.name}
+                      />
+                    </figure>
+
+                    <div className="text-center relative z-20">
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Nickname</span>
+                      <h2 className="text-2xl font-black text-slate-800 mb-4 capitalize truncate px-2">
+                        {content.alias}
+                      </h2>
+
+                      {/* Info Bento Box */}
+                      <div className="grid grid-cols-2 gap-2 bg-white/60 backdrop-blur-md border border-slate-100 rounded-2xl p-3 mb-6">
+                        <div>
+                          <p className="text-[9px] font-bold text-slate-400 uppercase italic">Species</p>
+                          <p className="text-[11px] font-black text-slate-600 capitalize">{content.name}</p>
+                        </div>
+                        <div className="border-l border-slate-200">
+                          <p className="text-[9px] font-bold text-slate-400 uppercase italic">Type</p>
+                          <p className="text-[11px] font-black text-slate-600 capitalize">{content.types[0].type.name}</p>
+                        </div>
+                      </div>
+
+                      {/* Modern Release Button */}
+                      <div className='flex flex-row gap-2'>
+
+                      <div>
+                      <button
+                        onClick={() => handleDelete(content.alias)}
+                        className="w-full flex items-center justify-center gap-2 py-4 px-4 bg-slate-100 hover:bg-red-50 text-slate-400 hover:text-red-500 rounded-2xl transition-all duration-300 group/btn shadow-inner"
+                      >
+                        <IoTrashOutline className="text-lg transition-transform group-hover/btn:rotate-12" />
+                        <span className="text-[11px] font-black uppercase tracking-widest">Release</span>
+                      </button>
+                      </div>
+                      <div>
+                        <Link
+                        to={`/detail/${content.name}`}
+                        className="w-full flex items-center justify-center gap-2 py-4 px-4 bg-red-300 hover:bg-red-50 text-slate-400 hover:text-red-500 rounded-2xl transition-all duration-300 group/btn shadow-inner"
+                      >
+                         <span className="text-[11px] font-black uppercase tracking-widest">Details</span>
+                      </Link>
+                      </div>
+                       </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      <ToastContainer position="bottom-center" transition={Bounce} theme="dark" />
+
+      {/* Shared CSS Animation */}
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-15px) rotate(2deg); }
+        }
+        .animate-float {
+          animation: float 4s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 };
